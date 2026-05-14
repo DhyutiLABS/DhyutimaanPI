@@ -89,9 +89,22 @@ Each skill follows Anthropic's [skill format](https://docs.claude.com): YAML fro
 - The skill `description` field is the primary trigger mechanism; make it concrete
 
 ## License
-
-TBD — add a LICENSE file before public use.
-
+GNU Public License
 ## Acknowledgments
 
-Built for the DhyutiLABS / CAISC research workflow. Skill structure follows Anthropic's `skill-creator` conventions.
+Built for the DhyutiLABS / CAISC research workflow workshop. Skill structure follows Anthropic's `skill-creator` conventions.
+
+## Citation
+
+If you use DhyutimaanPI in your research or teaching, please cite it as:
+
+```bibtex
+@software{dhyutimaanpi2026,
+  title        = {{DhyutimaanPI}: Automated Research and Discovery Agents for Physics-Informed Neural Networks},
+  author       = {{Rahul Sundar}},
+  year         = {2026},
+  month        = May,
+  version      = {0.1.0},
+  url          = {https://github.com/DhyutiLABS/DhyutimaanPI}
+}
+```
