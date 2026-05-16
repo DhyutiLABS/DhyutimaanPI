@@ -1,0 +1,49 @@
+{
+  "relative_l2_error": 0.0009875838877633214,
+  "max_pointwise_error": 0.0013416614383459091,
+  "bc_mse_top_wall": 1.22836937066495e-07,
+  "bc_mse_zero_walls": 5.308587181692322e-07,
+  "max_pde_residual": 0.006351307034492493,
+  "rms_pde_residual": 0.0013556553749367595,
+  "success_criteria_met": true,
+  "criteria_detail": {
+    "rel_l2_leq_1e-3": true,
+    "max_err_leq_5e-3": true,
+    "bc_top_mse_leq_1e-6": true
+  },
+  "train_config": {
+    "n_collocation": 16384,
+    "n_per_edge": 100,
+    "n_adam": 10000,
+    "n_lbfgs": 2000,
+    "w_pde": 1.0,
+    "w_bc": 10.0,
+    "seed": 42
+  },
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "PINN achieves rel-L2 < 1e-3 with 16384 collocation points (Adam+L-BFGS)",
+      "result": "confirmed",
+      "evidence": "rel_l2 = 9.876e-04  (threshold 1e-3)"
+    },
+    {
+      "id": 2,
+      "statement": "L-BFGS reduces rel-L2 by \u22655\u00d7 vs Adam-only",
+      "result": "not_measured",
+      "evidence": "Requires a separate Adam-only checkpoint. Re-run: python pinn_run/run.py --no-lbfgs, then compare."
+    },
+    {
+      "id": 3,
+      "statement": "Rel-L2 decreases monotonically across 256\u21921024\u21924096\u219216384 collocation pts",
+      "result": "not_measured",
+      "evidence": "Run: python pinn_run/run.py --sweep-collocation"
+    },
+    {
+      "id": 4,
+      "statement": "BC weight w_bc=10 reduces boundary residual vs w_bc=1",
+      "result": "not_measured",
+      "evidence": "Run: python pinn_run/run.py --w-bc 1.0 and compare bc_mse_top."
+    }
+  ]
+}

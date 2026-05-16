@@ -1,0 +1,173 @@
+[device] Using MPS.
+
+═══════════════════════════════════════════════════════
+  2D Heat PINN — standard run
+═══════════════════════════════════════════════════════
+[train] device=mps  N_r=4096  N_bc=400
+[train] Adam=10000 iters  L-BFGS=2000 iters  w_pde=1.0  w_bc=10.0
+[train] Model params: 16,897
+
+── Stage 1: Adam ──────────────────────────────────────────────
+  step      1  total=7.2050e-01  pde=5.3928e-03  bc=7.1511e-01  t=0.6s
+  step    100  total=5.2156e-01  pde=1.3699e-02  bc=5.0786e-01  t=12.6s
+  step    200  total=3.4520e-01  pde=5.2675e-02  bc=2.9253e-01  t=25.0s
+  step    300  total=2.8655e-01  pde=4.3315e-02  bc=2.4324e-01  t=37.4s
+  step    400  total=2.5626e-01  pde=3.7984e-02  bc=2.1827e-01  t=49.9s
+  step    500  total=2.3769e-01  pde=3.7492e-02  bc=2.0020e-01  t=62.4s
+  step    600  total=2.0054e-01  pde=2.4806e-02  bc=1.7573e-01  t=75.0s
+  step    700  total=1.6278e-01  pde=2.4571e-02  bc=1.3821e-01  t=87.6s
+  step    800  total=1.4841e-01  pde=2.8197e-02  bc=1.2021e-01  t=99.9s
+  step    900  total=1.4603e-01  pde=3.0472e-02  bc=1.1556e-01  t=112.3s
+  step   1000  total=1.2406e-01  pde=2.9283e-02  bc=9.4778e-02  t=124.7s
+  step   1100  total=1.3514e-01  pde=2.7042e-02  bc=1.0810e-01  t=137.1s
+  step   1200  total=9.1100e-02  pde=2.1259e-02  bc=6.9841e-02  t=149.4s
+  step   1300  total=5.6785e-02  pde=1.1154e-02  bc=4.5631e-02  t=161.6s
+  step   1400  total=3.9667e-02  pde=7.5709e-03  bc=3.2096e-02  t=174.1s
+  step   1500  total=2.5657e-02  pde=5.2645e-03  bc=2.0393e-02  t=186.7s
+  step   1600  total=2.4360e-02  pde=4.4026e-03  bc=1.9958e-02  t=199.3s
+  step   1700  total=1.4948e-02  pde=3.5387e-03  bc=1.1409e-02  t=211.9s
+  step   1800  total=1.1914e-02  pde=2.3136e-03  bc=9.6007e-03  t=225.1s
+  step   1900  total=9.8024e-03  pde=1.8170e-03  bc=7.9854e-03  t=238.5s
+  step   2000  total=8.5183e-03  pde=1.8689e-03  bc=6.6494e-03  t=251.4s
+  step   2100  total=1.4135e-02  pde=3.2727e-03  bc=1.0863e-02  t=264.8s
+  step   2200  total=5.7651e-03  pde=1.6177e-03  bc=4.1474e-03  t=278.3s
+  step   2300  total=5.1276e-03  pde=1.3742e-03  bc=3.7534e-03  t=291.1s
+  step   2400  total=9.8680e-03  pde=2.3794e-03  bc=7.4886e-03  t=304.5s
+  step   2500  total=4.3136e-02  pde=2.9977e-02  bc=1.3159e-02  t=317.6s
+  step   2600  total=1.5175e-02  pde=9.2644e-03  bc=5.9101e-03  t=330.9s
+  step   2700  total=2.8466e-03  pde=1.0941e-03  bc=1.7525e-03  t=344.2s
+  step   2800  total=3.9229e-03  pde=2.2502e-03  bc=1.6727e-03  t=357.4s
+  step   2900  total=9.6268e-03  pde=7.2156e-03  bc=2.4112e-03  t=370.2s
+  step   3000  total=1.7752e-03  pde=6.4047e-04  bc=1.1347e-03  t=383.6s
+  step   3100  total=1.5007e-03  pde=7.6781e-04  bc=7.3289e-04  t=396.7s
+  step   3200  total=5.6452e-03  pde=3.5709e-03  bc=2.0743e-03  t=411.4s
+  step   3300  total=2.5798e-03  pde=1.4864e-03  bc=1.0934e-03  t=425.3s
+  step   3400  total=1.3159e-02  pde=6.0178e-03  bc=7.1412e-03  t=438.6s
+  step   3500  total=1.1623e-02  pde=2.0763e-03  bc=9.5468e-03  t=452.1s
+  step   3600  total=2.4517e-03  pde=1.7071e-03  bc=7.4454e-04  t=464.7s
+  step   3700  total=2.6076e-03  pde=1.4241e-03  bc=1.1835e-03  t=477.3s
+  step   3800  total=7.5442e-03  pde=1.9737e-03  bc=5.5705e-03  t=490.3s
+  step   3900  total=2.7425e-03  pde=2.0236e-03  bc=7.1892e-04  t=503.7s
+  step   4000  total=6.7032e-04  pde=3.3948e-04  bc=3.3083e-04  t=517.2s
+  step   4100  total=2.0012e-03  pde=1.4841e-03  bc=5.1717e-04  t=530.5s
+  step   4200  total=3.8662e-03  pde=2.2343e-03  bc=1.6319e-03  t=542.8s
+  step   4300  total=1.9508e-03  pde=3.7801e-04  bc=1.5728e-03  t=555.1s
+  step   4400  total=1.0775e-03  pde=4.7009e-04  bc=6.0741e-04  t=567.6s
+  step   4500  total=5.3925e-04  pde=2.4144e-04  bc=2.9781e-04  t=580.7s
+  step   4600  total=4.3914e-04  pde=1.7542e-04  bc=2.6373e-04  t=593.8s
+  step   4700  total=5.2588e-04  pde=2.5549e-04  bc=2.7039e-04  t=606.2s
+  step   4800  total=5.3478e-04  pde=1.8312e-04  bc=3.5167e-04  t=618.5s
+  step   4900  total=6.7351e-04  pde=2.8829e-04  bc=3.8522e-04  t=631.1s
+  step   5000  total=2.5943e-02  pde=4.3036e-03  bc=2.1639e-02  t=643.6s
+  step   5100  total=4.7060e-04  pde=2.1139e-04  bc=2.5921e-04  t=656.2s
+  step   5200  total=2.3693e-03  pde=8.1008e-04  bc=1.5592e-03  t=668.9s
+  step   5300  total=1.2478e-03  pde=8.1650e-04  bc=4.3127e-04  t=681.3s
+  step   5400  total=1.9179e-03  pde=1.3855e-03  bc=5.3239e-04  t=693.5s
+  step   5500  total=3.6962e-03  pde=2.1036e-03  bc=1.5925e-03  t=705.9s
+  step   5600  total=9.2349e-04  pde=5.1314e-04  bc=4.1035e-04  t=718.4s
+  step   5700  total=6.7309e-04  pde=3.9074e-04  bc=2.8235e-04  t=730.8s
+  step   5800  total=4.8852e-04  pde=2.7872e-04  bc=2.0980e-04  t=743.1s
+  step   5900  total=8.0617e-04  pde=4.3242e-04  bc=3.7375e-04  t=755.9s
+  step   6000  total=9.0910e-03  pde=1.0764e-03  bc=8.0146e-03  t=768.6s
+  step   6100  total=4.9758e-04  pde=2.8652e-04  bc=2.1106e-04  t=781.2s
+  step   6200  total=1.3383e-02  pde=4.7345e-03  bc=8.6482e-03  t=793.8s
+  step   6300  total=6.3192e-04  pde=2.9534e-04  bc=3.3658e-04  t=806.6s
+  step   6400  total=7.0835e-03  pde=4.1377e-03  bc=2.9458e-03  t=819.2s
+  step   6500  total=1.4358e-03  pde=9.2144e-04  bc=5.1433e-04  t=831.8s
+  step   6600  total=2.2317e-03  pde=1.4760e-03  bc=7.5563e-04  t=844.4s
+  step   6700  total=7.1357e-04  pde=3.2338e-04  bc=3.9019e-04  t=857.2s
+  step   6800  total=2.2710e-04  pde=8.6076e-05  bc=1.4102e-04  t=869.9s
+  step   6900  total=2.5165e-04  pde=1.0701e-04  bc=1.4464e-04  t=882.4s
+  step   7000  total=2.1107e-04  pde=7.9017e-05  bc=1.3205e-04  t=895.0s
+  step   7100  total=1.2896e-03  pde=9.8799e-04  bc=3.0159e-04  t=907.5s
+  step   7200  total=3.1465e-04  pde=1.7022e-04  bc=1.4442e-04  t=920.1s
+  step   7300  total=2.5450e-04  pde=1.2610e-04  bc=1.2840e-04  t=932.8s
+  step   7400  total=1.2870e-03  pde=9.3878e-04  bc=3.4817e-04  t=945.3s
+  step   7500  total=2.1452e-03  pde=1.6644e-03  bc=4.8083e-04  t=957.9s
+  step   7600  total=1.1395e-02  pde=5.6728e-03  bc=5.7217e-03  t=970.6s
+  step   7700  total=4.0171e-03  pde=1.3770e-03  bc=2.6401e-03  t=983.3s
+  step   7800  total=4.5975e-03  pde=2.9650e-04  bc=4.3010e-03  t=996.0s
+  step   7900  total=1.0815e-03  pde=6.6011e-04  bc=4.2142e-04  t=1008.7s
+  step   8000  total=2.9722e-03  pde=2.1770e-03  bc=7.9525e-04  t=1021.1s
+  step   8100  total=6.3841e-04  pde=4.6485e-04  bc=1.7357e-04  t=1033.6s
+  step   8200  total=1.2695e-03  pde=8.0342e-04  bc=4.6606e-04  t=1046.1s
+  step   8300  total=2.9681e-04  pde=1.4045e-04  bc=1.5636e-04  t=1058.5s
+  step   8400  total=1.7594e-04  pde=8.5450e-05  bc=9.0491e-05  t=1071.1s
+  step   8500  total=1.7087e-04  pde=7.2108e-05  bc=9.8766e-05  t=1083.6s
+  step   8600  total=1.3887e-03  pde=1.0346e-03  bc=3.5408e-04  t=1096.2s
+  step   8700  total=3.4389e-03  pde=2.0733e-03  bc=1.3656e-03  t=1108.8s
+  step   8800  total=2.2129e-03  pde=1.3396e-03  bc=8.7331e-04  t=1121.4s
+  step   8900  total=1.4072e-03  pde=1.0360e-03  bc=3.7122e-04  t=1134.0s
+  step   9000  total=1.0873e-03  pde=8.3369e-04  bc=2.5365e-04  t=1146.5s
+  step   9100  total=1.4310e-03  pde=1.1343e-03  bc=2.9668e-04  t=1159.0s
+  step   9200  total=1.4170e-03  pde=3.3486e-04  bc=1.0822e-03  t=1171.5s
+  step   9300  total=7.5837e-03  pde=5.8490e-03  bc=1.7347e-03  t=1183.9s
+  step   9400  total=1.2368e-02  pde=2.8511e-03  bc=9.5169e-03  t=1196.5s
+  step   9500  total=1.2520e-04  pde=6.1072e-05  bc=6.4133e-05  t=1209.0s
+  step   9600  total=7.3275e-03  pde=5.8838e-03  bc=1.4437e-03  t=1221.5s
+  step   9700  total=1.7047e-04  pde=9.4801e-05  bc=7.5668e-05  t=1234.1s
+  step   9800  total=9.7322e-04  pde=8.3919e-04  bc=1.3403e-04  t=1246.6s
+  step   9900  total=1.5259e-04  pde=9.0089e-05  bc=6.2503e-05  t=1259.1s
+  step  10000  total=5.2074e-03  pde=1.1240e-03  bc=4.0834e-03  t=1271.6s
+
+── Stage 2: L-BFGS ────────────────────────────────────────────
+  L-BFGS eval    1  total=6.3890e-03  pde=3.0320e-03  bc=3.3571e-03  t=1271.7s
+  L-BFGS eval   50  total=1.0213e-04  pde=5.5532e-05  bc=4.6596e-05  t=1278.8s
+  L-BFGS eval  100  total=7.3240e-05  pde=3.9876e-05  bc=3.3365e-05  t=1286.5s
+  L-BFGS eval  150  total=5.7759e-05  pde=2.9277e-05  bc=2.8481e-05  t=1294.5s
+  L-BFGS eval  200  total=4.5072e-05  pde=2.1834e-05  bc=2.3238e-05  t=1302.5s
+  L-BFGS eval  250  total=3.9687e-05  pde=1.7569e-05  bc=2.2118e-05  t=1310.6s
+  L-BFGS eval  300  total=3.2221e-05  pde=1.4189e-05  bc=1.8032e-05  t=1318.6s
+  L-BFGS eval  350  total=2.8689e-05  pde=1.0998e-05  bc=1.7690e-05  t=1326.7s
+  L-BFGS eval  400  total=2.6333e-05  pde=1.0154e-05  bc=1.6180e-05  t=1334.6s
+  L-BFGS eval  450  total=2.4671e-05  pde=9.4498e-06  bc=1.5221e-05  t=1342.7s
+  L-BFGS eval  500  total=2.1322e-05  pde=8.4926e-06  bc=1.2830e-05  t=1350.7s
+  L-BFGS eval  550  total=1.9801e-05  pde=8.7189e-06  bc=1.1082e-05  t=1358.7s
+  L-BFGS eval  600  total=1.9318e-05  pde=9.0046e-06  bc=1.0313e-05  t=1366.8s
+  L-BFGS eval  650  total=1.6451e-05  pde=6.7689e-06  bc=9.6821e-06  t=1374.7s
+  L-BFGS eval  700  total=1.5506e-05  pde=7.0492e-06  bc=8.4572e-06  t=1382.9s
+  L-BFGS eval  750  total=1.4218e-05  pde=7.2254e-06  bc=6.9927e-06  t=1390.8s
+  L-BFGS eval  800  total=1.3218e-05  pde=6.6378e-06  bc=6.5802e-06  t=1398.9s
+  L-BFGS eval  850  total=1.2431e-05  pde=5.7149e-06  bc=6.7163e-06  t=1406.9s
+  L-BFGS eval  900  total=1.2033e-05  pde=5.7170e-06  bc=6.3162e-06  t=1415.0s
+  L-BFGS eval  950  total=1.1546e-05  pde=6.0183e-06  bc=5.5277e-06  t=1422.9s
+  L-BFGS eval 1000  total=1.1118e-05  pde=6.2204e-06  bc=4.8974e-06  t=1430.8s
+  L-BFGS eval 1050  total=1.0712e-05  pde=6.1147e-06  bc=4.5975e-06  t=1438.9s
+  L-BFGS eval 1100  total=1.0225e-05  pde=5.3447e-06  bc=4.8802e-06  t=1446.9s
+  L-BFGS eval 1150  total=9.9852e-06  pde=4.7442e-06  bc=5.2410e-06  t=1455.1s
+  L-BFGS eval 1200  total=9.0933e-06  pde=4.5142e-06  bc=4.5791e-06  t=1463.1s
+  L-BFGS eval 1250  total=8.5796e-06  pde=3.9082e-06  bc=4.6714e-06  t=1471.1s
+  L-BFGS eval 1300  total=8.2728e-06  pde=4.0136e-06  bc=4.2592e-06  t=1479.1s
+  L-BFGS eval 1350  total=7.9023e-06  pde=3.6607e-06  bc=4.2417e-06  t=1487.2s
+  L-BFGS eval 1400  total=7.5867e-06  pde=3.4340e-06  bc=4.1528e-06  t=1495.2s
+  L-BFGS eval 1450  total=7.4705e-06  pde=3.2929e-06  bc=4.1776e-06  t=1503.3s
+  L-BFGS eval 1500  total=7.3995e-06  pde=3.1763e-06  bc=4.2232e-06  t=1511.3s
+  L-BFGS eval 1550  total=7.1468e-06  pde=3.0072e-06  bc=4.1396e-06  t=1519.4s
+  L-BFGS eval 1600  total=6.7796e-06  pde=2.6830e-06  bc=4.0966e-06  t=1527.4s
+  L-BFGS eval 1650  total=6.6605e-06  pde=2.6289e-06  bc=4.0316e-06  t=1535.3s
+
+[train] Checkpoint saved → /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/checkpoint.pt
+[train] Training log → /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/training_log.csv
+[train] Total wall time: 1538.0s
+[verify] Loaded checkpoint: /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/checkpoint.pt
+         Train config: {'n_collocation': 4096, 'n_per_edge': 100, 'n_adam': 10000, 'n_lbfgs': 2000, 'w_pde': 1.0, 'w_bc': 10.0, 'seed': 42}
+
+═══════════════════════════════════════════════════════
+  Verification Results
+═══════════════════════════════════════════════════════
+  Relative L2 error     : 9.4997e-04  ✓  (≤ 1e-3)
+  Max pointwise error   : 1.3083e-03  ✓  (≤ 5e-3)
+  BC MSE — top wall     : 1.1316e-07  ✓  (≤ 1e-6)
+  BC MSE — zero walls   : 5.0056e-07
+  Max PDE residual      : 1.1878e-02
+  RMS PDE residual      : 1.4338e-03
+───────────────────────────────────────────────────────
+  Overall : PASS ✓
+═══════════════════════════════════════════════════════
+
+[verify] Results → /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/verification.json
+[verify] Plot → /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/verification_plots.png
+[verify] Loss curve → /Users/rahulsundar/Documents/Dhyuti/DhyutimaanPI/.claude/worktrees/dazzling-blackwell-7be854/pinn_run/outputs/loss_curve.png
+
+All success criteria met. Ready for analysis skill.
+

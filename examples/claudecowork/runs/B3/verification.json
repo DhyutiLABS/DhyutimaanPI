@@ -1,0 +1,35 @@
+{
+  "rel_l2_final": 0.2607139505067042,
+  "max_err": 0.2171660068035347,
+  "n_params": 7901,
+  "wallclock_s": 28.544145822525024,
+  "config": {
+    "name": "B3",
+    "problem": "B",
+    "n_interior": 512,
+    "n_boundary": 128,
+    "n_ic": 256,
+    "h": 0.01,
+    "dt": 0.001,
+    "alpha": 1.0,
+    "T": 0.1,
+    "layers": [
+      3,
+      50,
+      50,
+      50,
+      50,
+      1
+    ],
+    "n_steps": 4500,
+    "lr": 0.001,
+    "w_pde": 1.0,
+    "w_bc": 1.0,
+    "w_ic": 10.0,
+    "hard_constraint": true,
+    "fourier_n_freq": 0,
+    "fourier_sigma": 1.0,
+    "log_every": 300,
+    "seed": 0
+  }
+}

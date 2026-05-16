@@ -1,0 +1,35 @@
+{
+  "rel_l2_final": 7.853990216928757e-05,
+  "max_err": 0.0001390150797490053,
+  "n_params": 7851,
+  "wallclock_s": 25.675724983215332,
+  "config": {
+    "name": "A3",
+    "problem": "A",
+    "n_interior": 1024,
+    "n_boundary": 128,
+    "n_ic": 256,
+    "h": 0.01,
+    "dt": 0.001,
+    "alpha": 1.0,
+    "T": 0.1,
+    "layers": [
+      2,
+      50,
+      50,
+      50,
+      50,
+      1
+    ],
+    "n_steps": 3000,
+    "lr": 0.001,
+    "w_pde": 1.0,
+    "w_bc": 1.0,
+    "w_ic": 10.0,
+    "hard_constraint": true,
+    "fourier_n_freq": 0,
+    "fourier_sigma": 1.0,
+    "log_every": 200,
+    "seed": 0
+  }
+}
