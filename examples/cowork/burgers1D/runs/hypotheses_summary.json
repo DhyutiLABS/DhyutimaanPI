@@ -1,0 +1,41 @@
+{
+  "H1": {
+    "hypothesis": "Causal weighting \u22645e-3 while vanilla \u22651e-2 (soft variants)",
+    "soft_uniform_l2": 0.009343175815612333,
+    "soft_causal_l2": 0.013400174045862833,
+    "ratio": 0.6972428704011455,
+    "result": "refuted",
+    "evidence": "ratio=0.7x  causal=1.34e-02  uniform=9.34e-03"
+  },
+  "H2": {
+    "hypothesis": "Hard IC+BC reduces error by \u22655\u00d7 vs soft-causal",
+    "soft_causal_l2": 0.013400174045862833,
+    "hard_causal_l2": 0.00743544260395896,
+    "ratio": 1.8022026071088204,
+    "result": "refuted",
+    "evidence": "ratio=1.8x"
+  },
+  "H3": {
+    "hypothesis": "hard-causal is best of 8 DoE variants",
+    "best_variant": "hard-uniform-ff",
+    "best_l2": 0.007009887447433668,
+    "hard_causal_l2": 0.00743544260395896,
+    "result": "refuted",
+    "evidence": "best=hard-uniform-ff  l2=7.01e-03"
+  },
+  "H4": {
+    "hypothesis": "Fourier features reduce error by \u22651.5\u00d7 for Burgers",
+    "soft_uniform_l2": 0.009343175815612333,
+    "soft_uniform_ff_l2": 0.00702434465927116,
+    "ratio": 1.3301135221604818,
+    "result": "refuted",
+    "evidence": "ratio=1.33x"
+  },
+  "H5": {
+    "hypothesis": "Method fails catastrophically at \u03bd=0.001/\u03c0 (error > 0.1)",
+    "nu": 0.0003183098861837907,
+    "rel_l2": 0.5742949901330053,
+    "result": "confirmed",
+    "evidence": "rel_l2=5.74e-01"
+  }
+}

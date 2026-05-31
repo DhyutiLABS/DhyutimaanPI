@@ -15,7 +15,7 @@ Focus: operational guidance — which variants, training recipes, and failure mo
 
 1. **Hard-constraint output transforms are the strongest single intervention for steady Dirichlet-BC problems.** For steady 2D heat with homogeneous BCs, enforcing u = x(1−x)y(1−y)·NN eliminates BC loss entirely, routinely achieving 1e-4 to 1e-5 relative L² error in 3–5k Adam iterations — 100–1000× better than soft-constraint baselines at the same budget. (Prior DhyutimaanPI run: A3 reached 7.85e-5 in 3000 steps.)
 
-2. **Causal weighting is the state-of-the-art for time-dependent PDEs where early-time errors propagate.** Wang, Sankaran, Perdikaris (2022/2024) showed that re-weighting PDE residuals to respect physical causality is "all you need" for previously unsolvable chaotic benchmarks; it delivers consistent improvement on parabolic and hyperbolic problems. For 1D Burgers this is especially relevant: the solution at t=0 must be recovered before the shock can form correctly at later times.
+2. **Causal weighting is effective on stiff/chaotic time-dependent PDEs — but fails on smooth or low-stiffness problems.** Wang, Sankaran, Perdikaris (2022/2024) demonstrated SOTA on Lorenz, Kuramoto-Sivashinsky, and Navier-Stokes. ⚠️ **DhyutimaanPI DoE 2026 update:** Causal weighting with ε=100 is the *worst* Burgers DoE variant at ν=0.01/π and produces catastrophic failure on smooth 2D heat (367× error growth). The failure mechanism is **causal weight starvation**: when ε·T·ℓ̄₀ ≫ 1, gradient contribution of all but the earliest temporal slab collapses to zero within a few hundred training steps. Use the computable diagnostic ε·T·ℓ̄₀ before applying causal weighting; target product < 0.1.
 
 3. **Loss-component imbalance is the dominant failure mode for both problem classes.** The BC/IC loss gradient is often 100–1000× smaller than the PDE residual gradient, causing the network to fit the PDE while ignoring constraints (Wang, Teng, Perdikaris 2021). ReLoBRaLo (Bischof & Kraus 2021/2025) solves this 40% faster than learning-rate annealing on Burgers; hard constraints eliminate it for Dirichlet BCs.
 
@@ -59,7 +59,7 @@ The reference baseline. An MLP with tanh activations minimizes a weighted sum of
 
 ### Causal and Time-Marching Variants
 
-**Causal PINN — Wang, Sankaran, Perdikaris (2022 arXiv:2203.07404; CMAME 421:116813, 2024).** Re-weights PDE residuals across the time axis: residuals at later times are down-weighted until earlier-time residuals converge. Exponential causal weight: w(t) = exp(−ε · ∑_{t'<t} r(t')). Demonstrates SOTA on Lorenz, Kuramoto-Sivashinsky, and Navier-Stokes; applicable to Burgers. Code: github.com/PredictiveIntelligenceLab/CausalPINNs. **This is the top recommendation for 1D Burgers DoE.**
+**Causal PINN — Wang, Sankaran, Perdikaris (2022 arXiv:2203.07404; CMAME 421:116813, 2024).** Re-weights PDE residuals across the time axis: residuals at later times are down-weighted until earlier-time residuals converge. Exponential causal weight: w(t) = exp(−ε · ∑_{t'<t} r(t')). Demonstrates SOTA on Lorenz, Kuramoto-Sivashinsky, and Navier-Stokes. Code: github.com/PredictiveIntelligenceLab/CausalPINNs. ~~**This is the top recommendation for 1D Burgers DoE.**~~ ⚠️ **UPDATED (DhyutimaanPI DoE 2026):** Causal weighting with ε=100 is the *worst* performer on Burgers ν=0.01/π (mild stiffness) and causes catastrophic compound failure at ν=0.001/π. Apply only when ε·T·ℓ̄₀ < 0.1 (evaluate at initialisation). Benefits are confined to genuinely stiff or chaotic problems where ℓ̄₀ is small relative to the starvation threshold.
 
 **Causality-Enhanced Discrete PINNs — IJCAI 2024.** Combines causal weighting with discretized time-stepping; extends CausalPINNs idea to structured time grids.
 
@@ -128,19 +128,82 @@ The reference baseline. An MLP with tanh activations minimizes a weighted sum of
 | Loss-component imbalance (PDE gradient >> BC/IC gradient) | Wang, Teng, Perdikaris 2021 | Hard constraints (Dirichlet) or ReLoBRaLo/LR-annealing weighting |
 | Spectral bias (slow convergence on high-frequency components) | Wang, Wang, Perdikaris 2021; Tancik 2020 | Fourier feature embedding (only when solution has high-frequency content) |
 | Temporal causality violation (late-time data fit before early-time) | Wang, Sankaran, Perdikaris 2022 | Causal weighting; time-marching schemes |
+| **Causal weight starvation on smooth/low-stiffness problems** ⚠️ | **DhyutimaanPI DoE 2026** | **Do NOT use ε=100 unless ε·T·ℓ̄₀ < 0.1 (evaluate at step 0)** |
+| **Representational-starvation compound failure (thin-layer Burgers)** ⚠️ | **DhyutimaanPI DoE 2026** | **Increase network width/collocation density before applying causal weighting** |
 | Globally incorrect low-residual solution (Burgers) | WF-PINNs 2025; singular-layer PINN 2024 | Weak-form loss; entropy condition enforcement; adaptive collocation |
-| Ill-conditioned hard-constraint ansatz (unsteady, near boundary) | DhyutimaanPI B3 analysis | Smooth time-window envelope; modified ansatz |
+| Ill-conditioned hard-constraint ansatz (unsteady, near boundary) | DhyutimaanPI B3 analysis | Smooth time-window envelope; modified ansatz (disproved for Burgers hard-IC — see below) |
 | Deep MLP instability (PDE residual gradient breakdown) | PirateNets 2024 | PirateNets / residual adaptive connections |
 | Insufficient collocation density near shocks | Chiu et al. 2022; PINNACLE 2024 | Adaptive residual-guided collocation |
 
 ---
 
+## ⚠️ Post-Experiment Updates — DhyutimaanPI DoE (May 2026)
+
+> These findings update or contradict pre-survey recommendations above. They are based on a full 2³ factorial DoE (26 variants) on 2D Heat and 1D Burgers, reported in `dhyutimaan_caisc2026.tex`.
+
+### KB Contradictions
+
+**Headline finding #2 (causal weighting) — CONTRADICTED for Burgers**
+
+The pre-survey recommended causal weighting as "the top recommendation for 1D Burgers DoE." This is wrong at ε=100 for ν=0.01/π:
+- Soft-causal is the *worst* Burgers DoE variant: ε_rel = 1.34×10⁻² vs. 9.34×10⁻³ for soft-uniform (43% worse).
+- Burgers H1 (causal reduces error vs. uniform) was refuted and reversed.
+- The literature result "causal PINN achieves ~1e-4" uses a 9-layer × 20-width network with 25k collocation points — 3× more parameters than our 4×64 MLP. At equal architecture scale, causal weighting provides no benefit on ν=0.01/π Burgers.
+
+**Recommended Starting Point #4 — WRONG DIRECTION**
+
+"Hypothesis: causal weighting reaches ≤5e-3 while vanilla plateaus at ≥1e-2." Outcome: causal was worse than vanilla at every comparison. Retract this recommendation.
+
+### New Analytical Result: Causal Weight Starvation Condition
+
+For causal weighting with parameter ε, K temporal slabs, final time T:
+
+**w_k ≈ exp(−ε·(k−1)·ℓ̄₀)**
+
+where ℓ̄₀ is the mean per-slab PDE residual at initialisation.
+
+**Starvation occurs when: ε·T·ℓ̄₀ ≫ 1**
+
+Computable diagnostic: run 10 Adam steps, compute ℓ̄₀ from training_log.csv, evaluate ε·T·ℓ̄₀. If > 1, reduce ε until product < 0.1.
+
+### Causal Weighting Across Four Regimes (Unified Picture)
+
+| Regime | ε·T·ℓ̄₀ | Causal result | Mechanism |
+|---|---|---|---|
+| Heat B (smooth, T=0.1, ε=100) | ≫ 1 | 367× error growth | Pure starvation |
+| Burgers ν=0.01/π (mild layer) | Moderate | 43% worse (soft-causal) | Mild starvation; hard IC partially protective |
+| Burgers ν=0.001/π (thin layer) | ≫ 1 (inflated by unresolved layer) | ε_rel=0.574 catastrophic | Representational failure → inflated ℓ̄₀ → starvation compound |
+| Burgers ν=0.1/π (smooth wide) | ≈ 0 | ε_rel=2.75×10⁻⁴ (best result) | ℓ̄₀ tiny → causal degenerates to uniform → no harm |
+
+**Key insight:** Hard IC enforces t=0 to machine precision, reducing early-slab residuals and partially relaxing the starvation condition. This is why hard-causal (7.44×10⁻³) is less damaged than soft-causal (1.34×10⁻²) at standard ν.
+
+**Flat error profile as starvation signature:** When causal starvation suppresses all slabs beyond t≈0 equally, the per-slice error profile is *flat* (growth ratio ≈ 1), not monotonically growing. Flat profile ≠ good training; it means the network learned almost nothing at any time beyond the initial slab.
+
+### Resolved Open Questions
+
+**When do Fourier features help?** (Previously open)
+- Heat steady (smooth, hard BC): negligible effect (marginally better, within noise)
+- Heat steady (smooth, soft BC): FF hurts 2.2× — rougher loss landscape
+- Burgers ν=0.01/π (near-discontinuity): FF improves 1.33× — below 1.5× threshold but directionally consistent with spectral bias argument
+- **Rule:** FF beneficial only when solution has genuine high-frequency spatial content AND residuals are not dominated by an unresolved thin layer.
+
+**Hard IC+BC for Burgers — singularity question:** (Previously open)
+The ansatz û = −sin(πx) + t(1−x²)·NN is well-posed. Unlike Heat B (where the target NN function has 0/0 form at boundary), the Burgers hard ansatz does not evaluate the NN at t=0 during PDE residual computation. The hard constraint is safe for Burgers at all tested viscosities. At ν_low, failure is representational, not ansatz conditioning.
+
+### Priority Next Experiments (from DoE analysis)
+
+1. **ε sweep** (ε ∈ {1, 10, 50, 100, 200}) on Heat B and Burgers ν=0.01/π — quantify critical ε* below which starvation does not trigger.
+2. **Adaptive collocation** — residual-guided resampling near the thin layer for ν=0.001/π; expected to reduce ℓ̄₀ and break the compound failure.
+3. **Multi-seed validation** (N≥3) — causal starvation claim is mechanistically supported but all results are single-seed.
+4. **Longer horizon for Heat B** (T=1.0) — test whether causal weighting becomes beneficial when temporal complexity is higher (more decay time constants resolved).
+
+---
+
 ## Open Problems and Contested Points
 
-- **When do Fourier features help?** Tancik 2020 argues yes for high-frequency; prior DhyutimaanPI confirmed they hurt on smooth heat. For Burgers near shock the answer is less clear; no clean head-to-head at our scale.
-- **NTK weighting vs. ReLoBRaLo vs. gradient-norm annealing.** No clean comparison on unit-domain Burgers. ReLoBRaLo claims 40% speedup on Burgers; NTK weighting has stronger theory but is expensive.
-- **Fair benchmarking.** PINNacle 2024 calls out that many published PINN improvements are benchmarked on settings favorable to the proposed method. Unit-domain, moderate-ν Burgers is a fair test.
-- **Hard IC + hard BC for Burgers.** The ansatz u(x,t) = −sin(πx) + t·g(x)·NN(x,t) (with g(x)=1−x² enforcing BCs) keeps IC exactly; the issue is whether the implied NN target is smooth. This deserves a direct test.
+- **NTK weighting vs. ReLoBRaLo vs. gradient-norm annealing.** No clean comparison on unit-domain Burgers. ReLoBRaLo claims 40% speedup; NTK weighting has stronger theory but is expensive. Not tested in our DoE.
+- **Fair benchmarking.** PINNacle 2024 calls out that many published PINN improvements are benchmarked on settings favorable to the proposed method. Our results confirm this: causal weighting succeeds in the Wang et al. 2022 benchmarks (Allen-Cahn, Navier-Stokes) but fails on smooth heat and moderate-stiffness Burgers.
+- **Causal ε* as a function of problem parameters.** The starvation condition gives a computable diagnostic but not an analytical formula for ε*. Deriving ε*(ν, T, architecture) analytically is an open problem.
 
 ---
 
@@ -164,7 +227,7 @@ The reference baseline. An MLP with tanh activations minimizes a weighted sum of
 
 **For 1D Burgers (new):**
 
-4. **Causal PINN vs. vanilla PINN at ν = 0.01/π (standard Raissi setup).** Hypothesis: causal weighting reaches ≤5e-3 relative L² while vanilla PINN plateaus at ≥1e-2. This is the most important falsifiable claim for the Burgers section of the paper.
+4. ~~**Causal PINN vs. vanilla PINN at ν = 0.01/π.**~~ ⚠️ **RETRACTED (DhyutimaanPI DoE 2026):** Hypothesis was wrong direction. Soft-causal (1.34×10⁻²) was 43% *worse* than soft-uniform (9.34×10⁻³). Causal weighting at ε=100 triggers starvation at this viscosity. **Revised recommendation:** run an ε sweep (ε ∈ {1, 10, 50, 100}) on Burgers to find ε* below which starvation does not trigger; this is now the highest-priority next experiment for Burgers causal weighting.
 5. **Hard IC vs. soft IC — smooth ansatz u = −sin(πx) + t·(1−x²)·NN.** The hard-IC ansatz eliminates IC loss and enforces BCs simultaneously. Hypothesis: hard IC reduces total error by ≥5× vs. soft-constraint baseline.
 6. **ν sweep (0.1/π, 0.01/π, 0.001/π) with causal weighting.** Characterize at what viscosity the method degrades. Hypothesis: causal PINN maintains ≤1e-2 error for ν ≥ 0.01/π but fails (error > 0.1) for ν = 0.001/π.
 7. **Collocation strategy: uniform vs. residual-adaptive.** Allocate 20% of collocation budget to residual-gradient-weighted resampling at epoch 500. Hypothesis: adaptive collocation reduces error near shock by ≥2× vs. uniform at the same total point count.
