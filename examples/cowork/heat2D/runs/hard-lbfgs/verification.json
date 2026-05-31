@@ -1,0 +1,8 @@
+{
+  "variant": "hard-lbfgs",
+  "problem": "A_steady",
+  "rel_l2": 4.379842835237581e-06,
+  "max_abs_error": 6.279048656077091e-06,
+  "slice_errors": {},
+  "growth_ratio": null
+}

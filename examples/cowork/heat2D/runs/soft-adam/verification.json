@@ -1,0 +1,8 @@
+{
+  "variant": "soft-adam",
+  "problem": "A_steady",
+  "rel_l2": 0.0002474548860915072,
+  "max_abs_error": 0.0007962454110383987,
+  "slice_errors": {},
+  "growth_ratio": null
+}

@@ -1,0 +1,40 @@
+{
+  "H1": {
+    "hypothesis": "Hard constraint reduces steady rel-L\u00b2 by \u2265100\u00d7 vs soft-adam",
+    "soft_rel_l2": 0.0002474548860915072,
+    "hard_rel_l2": 4.313668507982389e-06,
+    "ratio": 57.36529954343851,
+    "result": "refuted",
+    "evidence": "ratio = 57.4x"
+  },
+  "H2": {
+    "hypothesis": "L-BFGS polishing reduces hard-constraint error by \u22655\u00d7",
+    "hard_adam_rel_l2": 4.313668507982389e-06,
+    "hard_lbfgs_rel_l2": 4.379842835237581e-06,
+    "ratio": 0.9848911639653383,
+    "result": "refuted",
+    "evidence": "ratio = 1.0x"
+  },
+  "H3": {
+    "hypothesis": "Fourier features hurt smooth solution (hard+FF \u22652\u00d7 worse than hard)",
+    "hard_rel_l2": 4.313668507982389e-06,
+    "hard_ff_rel_l2": 3.7003229049276993e-06,
+    "ratio": 0.8578134592587026,
+    "result": "refuted",
+    "evidence": "ratio = 0.9x"
+  },
+  "H4": {
+    "hypothesis": "Causal weighting reduces temporal error growth by \u22652\u00d7 vs soft-std",
+    "soft_std_growth": 8.752437880512161,
+    "soft_causal_growth": 367.4001038220531,
+    "result": "refuted",
+    "evidence": "growth_std=8.75  growth_causal=367.40"
+  },
+  "H5": {
+    "hypothesis": "Hard IC ansatz for Problem B fails (worse than soft-std)",
+    "soft_std_rel_l2": 0.002355873189280996,
+    "hard_std_rel_l2": 0.0005036099240055234,
+    "result": "refuted",
+    "evidence": "hard=5.04e-04  soft=2.36e-03"
+  }
+}

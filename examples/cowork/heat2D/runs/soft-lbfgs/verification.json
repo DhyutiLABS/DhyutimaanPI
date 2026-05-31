@@ -1,0 +1,8 @@
+{
+  "variant": "soft-lbfgs",
+  "problem": "A_steady",
+  "rel_l2": 6.846844248282991e-05,
+  "max_abs_error": 0.00018236041069018516,
+  "slice_errors": {},
+  "growth_ratio": null
+}
