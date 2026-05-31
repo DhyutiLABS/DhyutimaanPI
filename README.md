@@ -1,32 +1,56 @@
 # DhyutimaanPI
 
-**Automated research and discovery agents for science and engineering, grounded in Physics-Informed Neural Networks (PINNs).**
+**A four-skill agentic pipeline for reproducible Physics-Informed Neural Network experimentation.**
 
-This repository contains a chain of four Claude skills that together cover the full research loop for a computational mechanics study:
+DhyutimaanPI converts informal PDE intuitions into pre-registered, falsifiable experiments and traces every failure to a specific mechanism. Applied to 26 factorial variants across 2D heat conduction and 1D Burgers, 9 of 10 pre-registered hypotheses are refuted — and every refutation is explained analytically.
 
-```
-literature-survey-pinn  →  pinn-problem-spec  →  pinn-scaffold  →  pinn-analysis-report
-        (survey)             (frame)               (implement)        (analyze + report)
-```
-
-Each skill is a self-contained `SKILL.md` file under `skills/`. They are designed to be invoked individually or as a pipeline, and to hand off structured artifacts (`pinn-knowledge-base.md`, `problem-spec.md`, training outputs, `analysis-report.md`) between stages.
+> *"DhyutimaanPI is a four-skill agentic pipeline for reproducible PINN experimentation; across 26 factorial variants on 2D heat and 1D Burgers, 9 of 10 pre-registered hypotheses are refuted and every failure traced to a mechanism."*
+> — CAISc 2026 submission
 
 ---
 
-## What's in this repo
+## The pipeline
+
+```
+Surveyor            Framer              Implementer         Analyst
+─────────────────   ─────────────────   ─────────────────   ─────────────────
+literature-survey-  pinn-problem-spec   pinn-scaffold       pinn-analysis-
+pinn                                                        report
+
+Input: topic/PDE    Input: KB or desc.  Input: spec         Input: run outputs
+Output: KB.md       Output: spec.md     Output: pinn_run/   Output: report.md
+```
+
+Each stage hands off a human-readable artefact. The contract between skills is **filenames** — any skill can be re-run independently as long as its upstream artefact exists.
+
+---
+
+## Repository layout
 
 ```
 DhyutimaanPI/
-├── README.md                        ← you are here
-├── skills/
+├── README.md
+├── skills/                            ← four skill definitions (SKILL.md each)
 │   ├── literature-survey-pinn/
-│   │   └── SKILL.md
 │   ├── pinn-problem-spec/
-│   │   └── SKILL.md
 │   ├── pinn-scaffold/
-│   │   └── SKILL.md
 │   └── pinn-analysis-report/
-│       └── SKILL.md
+├── examples/
+│   └── cowork/                        ← CAISc 2026 study
+│       ├── dhyutimaan_caisc2026.pdf   ← paper (19 pages)
+│       ├── dhyutimaan_caisc2026.tex   ← LaTeX source
+│       ├── pinn-knowledge-base.md     ← Surveyor output + post-experiment updates
+│       ├── SUPPLEMENTARY_README.md    ← reviewer navigation guide
+│       ├── figures/                   ← figure_heat_A/B.pdf, figure_burgers.pdf
+│       ├── heat2D/
+│       │   ├── problem-spec.md        ← Framer output (DoE, 5 hypotheses)
+│       │   ├── analysis-report.md     ← Analyst output (16 variants)
+│       │   ├── pinn_run/              ← model.py, train.py, verify.py
+│       │   └── runs/                  ← 16 variant dirs (training_log, verification, checkpoint)
+│       └── burgers1D/
+│           ├── problem-spec.md        ← Framer output (DoE, 5 hypotheses)
+│           ├── pinn_run/              ← model.py, train.py, verify.py
+│           └── runs/                  ← 8 DoE + 2 stress-test dirs
 └── docs/
     ├── using-with-claude-code.md
     ├── using-with-claude-ai.md
@@ -34,77 +58,89 @@ DhyutimaanPI/
     └── using-with-antigravity.md
 ```
 
-## The skill chain at a glance
-
-| Skill | Input | Output | When to invoke |
-|---|---|---|---|
-| `literature-survey-pinn` | A topic or PDE class | `pinn-knowledge-base.md` | Starting a new study; need grounding in prior work |
-| `pinn-problem-spec` | Knowledge base or informal description | `problem-spec.md` | Ready to frame a concrete experiment |
-| `pinn-scaffold` | `problem-spec.md` | `pinn_run/` (Python module + verification harness) | Ready to write code |
-| `pinn-analysis-report` | `pinn_run/outputs/*` + spec | `analysis-report.md` | Training has finished |
-
-The contract between skills is **filenames**. Each skill reads specific files from the working directory and writes specific files back. This means any skill can be invoked independently as long as its upstream artifact exists.
+---
 
 ## Quick start
 
-Pick the doc that matches your environment:
+```bash
+# 1. Run the surveyor
+/literature-survey-pinn   # produces pinn-knowledge-base.md
 
-- **[Claude Code](docs/using-with-claude-code.md)** — primary supported workflow; skills auto-load
-- **[Claude.ai](docs/using-with-claude-ai.md)** — upload the `.skill` files in chat or use Projects
-- **[Cursor](docs/using-with-cursor.md)** — via Claude integration; manual skill invocation
-- **[Antigravity](docs/using-with-antigravity.md)** — Google's agentic IDE; adapt skills as agent instructions
-- **VS Code (generic)** — use the Claude extension; same flow as Cursor
+# 2. Frame the problem
+/pinn-problem-spec        # produces problem-spec.md
 
-## Why a chain of skills rather than one big agent
+# 3. Scaffold and run
+/pinn-scaffold            # produces pinn_run/ with train.py + verify.py
+conda activate torchmps
+python pinn_run/run.py
 
-Three reasons:
+# 4. Analyse
+/pinn-analysis-report     # produces analysis-report.md
+```
 
-1. **Separable failure.** When something goes wrong, you know which stage failed. A monolithic agent collapses survey + framing + implementation + analysis into one opaque output.
-2. **Verifiable handoffs.** Each artifact (`problem-spec.md`, `verification.json`, etc.) is human-readable and reviewable. You can stop, edit, and resume at any boundary.
-3. **Reusability.** The analysis skill works on *any* PINN run that produces the expected output schema, not just runs from this scaffold. The scaffold works for any spec that matches the contract.
+See `docs/` for environment-specific guides (Claude Code, Claude.ai, Cursor, Antigravity).
 
-This mirrors how a competent human research workflow is structured — survey, frame, implement, analyze — and treats each step as a first-class artifact rather than a transient prompt.
+---
 
-## Design principles
+## Why this architecture
 
-The skills enforce four practices that PINN papers commonly skip:
+**Separable failure.** When something goes wrong, you know which stage failed.
 
-- **Falsifiable hypotheses.** `pinn-problem-spec` rejects vague hypotheses ("the PINN will work") and forces specific, measurable predictions.
-- **Reference solutions are non-negotiable.** Method of manufactured solutions is the default; the analysis skill cannot operate without a ground truth.
-- **Loss components are reported separately.** A low total loss can hide a high boundary error. The scaffold logs every term to its own CSV column.
-- **Adversarial analysis.** `pinn-analysis-report` is not a celebrator. It audits every failure mode the spec listed and flags every confirmation that rests on shaky evidence.
+**Verifiable handoffs.** Every artefact (`problem-spec.md`, `verification.json`, `analysis-report.md`) is human-readable and editable. You can stop, inspect, override, and resume at any stage boundary.
 
-## Stack and hardware
+**Adversarial analysis.** The Analyst skill does not celebrate convergence. It audits every failure mode the spec listed, checks every hypothesis including the ones that look obviously confirmed, and flags every claim that rests on a single seed.
 
-Default implementation backend: **PyTorch ≥ 2.0 with `torch.func`** (grad, vmap, jacrev, hessian). DeepXDE is supported as an alternate backend when the user wants a higher-level interface.
+**Pre-registration enforces honesty.** Hypotheses are written and committed before training runs. The spec cannot be edited post-hoc to match results.
 
-Tested target: Apple Silicon (M-series, including M5 Pro) with the MPS backend, and Linux/CUDA. Small PINNs often train fastest on CPU due to kernel-launch overhead on small batches — this is normal.
+---
 
-## Contributing
+## Design principles enforced by the skills
 
-Each skill follows Anthropic's [skill format](https://docs.claude.com): YAML frontmatter (name, description) followed by markdown instructions. When modifying:
+| Practice | Where enforced |
+|---|---|
+| Falsifiable, threshold-quantified hypotheses | `pinn-problem-spec` rejects vague predictions |
+| Reference solution required | `pinn-scaffold` generates MMS or FD reference before training |
+| Loss components logged separately | `train.py` writes `loss_pde`, `loss_ic`, `loss_bc` as separate CSV columns |
+| Per-slice temporal error | `verify.py` computes error at each time slice, not just global L² |
+| Failure-mode audit | `pinn-analysis-report` walks every spec §9 item and reports whether it triggered |
 
-- Keep `SKILL.md` under 500 lines (current files are 170–200)
-- Preserve the artifact filenames in the chain (`problem-spec.md`, `pinn_run/outputs/verification.json`, etc.) — downstream skills depend on them
-- The skill `description` field is the primary trigger mechanism; make it concrete
+---
 
-## License
-GNU Public License
-## Acknowledgments
+## Hardware and stack
 
-Built for the DhyutiLABS / CAISC research workflow workshop. Skill structure follows Anthropic's `skill-creator` conventions.
+- **Backend:** PyTorch ≥ 2.1 with `torch.func` (grad, vmap, jacrev, hessian)
+- **Primary target:** Apple Silicon MPS (`torchmps` conda environment)
+- **Fallback:** CPU or CUDA; behaviour is identical
+
+---
+
+## CAISc 2026 results at a glance
+
+| Problem | Best variant | ε_rel |
+|---|---|---|
+| Heat 2D — Poisson (steady) | hard-lbfgs-ff | 2.14 × 10⁻⁶ |
+| Heat 2D — Parabolic (unsteady) | hard-std | 5.04 × 10⁻⁴ |
+| Burgers 1D — ν = 0.01/π (DoE) | hard-uniform-ff | 7.01 × 10⁻³ |
+| Burgers 1D — ν = 0.001/π (stress) | hard-causal | 0.574 (**H5 confirmed**) |
+
+Key finding: causal temporal weighting produces 367× error growth when applied to a smooth parabolic problem — explained analytically by the weight starvation condition ε·T·ℓ̄₀ ≫ 1.
+
+---
 
 ## Citation
 
-If you use DhyutimaanPI in your research or teaching, please cite it as:
-
 ```bibtex
-@software{dhyutimaanpi2026,
-  title        = {{DhyutimaanPI}: Automated Research and Discovery Agents for Physics-Informed Neural Networks},
-  author       = {{Rahul Sundar}},
-  year         = {2026},
-  month        = May,
-  version      = {0.1.0},
-  url          = {https://github.com/DhyutiLABS/DhyutimaanPI}
+@inproceedings{sundar2026dhyutimaanpi,
+  title     = {{DhyutimaanPI}: An Agentic Pipeline for Reproducible {PINN}
+               Failure-Mode Discovery via Systematic Factorial Experimentation},
+  author    = {Sundar, Rahul},
+  booktitle = {Proceedings of CAISc 2026},
+  year      = {2026}
 }
 ```
+
+---
+
+## License
+
+GNU General Public License v3.0
