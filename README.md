@@ -143,4 +143,4 @@ Key finding: causal temporal weighting produces 367× error growth when applied 
 
 ## License
 
-GNU General Public License v3.0
+MIT License
